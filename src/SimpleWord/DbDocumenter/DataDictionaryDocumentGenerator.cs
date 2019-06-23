@@ -41,7 +41,7 @@ namespace DbDocumenter
                     {
                         AddFieldListTableHeader(table);
 
-                        _body.Append(CreateFieldListTable(table));
+                        _document.AddTable(CreateFieldListTable(table));
                     }
                     else
                     {
@@ -55,7 +55,7 @@ namespace DbDocumenter
                     AddStoredProcTableHeader(sproc);
                     if (sproc.Parameters.Any())
                     {
-                        _body.Append(CreateStoredProcParameterTable(sproc.Parameters));
+                        AddTable(CreateStoredProcParameterTable(sproc.Parameters));
                     }
                     else
                     {
@@ -65,16 +65,6 @@ namespace DbDocumenter
                     AddBlankLine();
                 }
             }
-        }
-
-        void AddText(string text)
-        {
-            _document.AddText(text);
-        }
-
-        void AddText(string text, string style)
-        {
-            _document.AddText(text,style);
         }
 
         void AddOverviewHeader(string databaseName)
@@ -92,11 +82,11 @@ namespace DbDocumenter
             AddBlankLine();
         }
 
-        private Table CreateStoredProcParameterTable(List<StoredProcedureParameter> group)
+        private SimpleWordTable CreateStoredProcParameterTable(List<StoredProcedureParameter> group)
         {
-            var tb = new TableBuilder<StoredProcedureParameter>(_storedProcedureParameterTableDefinition, _request.ColorScheme);
+            var tb = CreateTableBuilder(_storedProcedureParameterTableDefinition, _request.ColorScheme);
 
-            Table table = tb.Build(_body, group);
+            var table = tb.Build(group);
 
             return table;
         }
@@ -108,15 +98,15 @@ namespace DbDocumenter
                 Columns = new List<ColumnDefinition<TableField>> {
                     new ColumnDefinition<TableField> (_request.ColorScheme){
                         HeaderText="PK",
-                        Contents= (d) => {return d.IsPrimaryKey ? "Yes" : "";},
+                        Contents= (d) => d.IsPrimaryKey ? "Yes" : "",
                     },
                     new ColumnDefinition<TableField> (_request.ColorScheme) {
                         HeaderText="FK",
-                        Contents= (d) => {return d.IsForeignKey ? "Yes" : "";}
+                        Contents= (d) => d.IsForeignKey ? "Yes" : ""
                     },
                     new ColumnDefinition<TableField> (_request.ColorScheme) {
                         HeaderText="UK",
-                        Contents= (d) => {return d.IsUniqueKey? "Yes" : "";}
+                        Contents= (d) => d.IsUniqueKey? "Yes" : ""
                     },
                     new ColumnDefinition<TableField>  (_request.ColorScheme){
                         HeaderText="Column",
@@ -225,14 +215,13 @@ namespace DbDocumenter
             AddBlankLine();
         }
 
-        Table CreateFieldListTable(SchemaTable schemaTable)
+        SimpleWordTable CreateFieldListTable(SchemaTable schemaTable)
         {
-            var tb = CreateTableBuilder<TableField>(_fieldListTableDefinition, _request.ColorScheme);
+            var tb = CreateTableBuilder(_fieldListTableDefinition, _request.ColorScheme);
 
-            Table table = tb.Build(_body, schemaTable.Fields);
+            var table = tb.Build(schemaTable.Fields);
 
             return table;
-
         }
 
     }

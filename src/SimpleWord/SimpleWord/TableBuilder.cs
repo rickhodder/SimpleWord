@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Wordprocessing;
-using BottomBorder = DocumentFormat.OpenXml.Drawing.BottomBorder;
-using InsideHorizontalBorder = DocumentFormat.OpenXml.Drawing.InsideHorizontalBorder;
-using InsideVerticalBorder = DocumentFormat.OpenXml.Drawing.InsideVerticalBorder;
-using LeftBorder = DocumentFormat.OpenXml.Drawing.LeftBorder;
-using Paragraph = DocumentFormat.OpenXml.Drawing.Paragraph;
-using RightBorder = DocumentFormat.OpenXml.Drawing.RightBorder;
-using Run = DocumentFormat.OpenXml.Drawing.Run;
-using RunProperties = DocumentFormat.OpenXml.Drawing.RunProperties;
-using Table = DocumentFormat.OpenXml.Drawing.Table;
-using TableCell = DocumentFormat.OpenXml.Drawing.TableCell;
-using TableCellProperties = DocumentFormat.OpenXml.Drawing.TableCellProperties;
-using TableProperties = DocumentFormat.OpenXml.Drawing.TableProperties;
-using TableRow = DocumentFormat.OpenXml.Drawing.TableRow;
-using TopBorder = DocumentFormat.OpenXml.Drawing.TopBorder;
+using BottomBorder = DocumentFormat.OpenXml.Wordprocessing.BottomBorder;
+using InsideHorizontalBorder = DocumentFormat.OpenXml.Wordprocessing.InsideHorizontalBorder;
+using InsideVerticalBorder = DocumentFormat.OpenXml.Wordprocessing.InsideVerticalBorder;
+using LeftBorder = DocumentFormat.OpenXml.Wordprocessing.LeftBorder;
+using Paragraph = DocumentFormat.OpenXml.Wordprocessing.Paragraph;
+using RightBorder = DocumentFormat.OpenXml.Wordprocessing.RightBorder;
+using Run = DocumentFormat.OpenXml.Wordprocessing.Run;
+using RunProperties = DocumentFormat.OpenXml.Wordprocessing.RunProperties;
+using Table = DocumentFormat.OpenXml.Wordprocessing.Table;
+using TableCell = DocumentFormat.OpenXml.Wordprocessing.TableCell;
+using TableCellProperties = DocumentFormat.OpenXml.Wordprocessing.TableCellProperties;
+using TableProperties = DocumentFormat.OpenXml.Wordprocessing.TableProperties;
+using TableRow = DocumentFormat.OpenXml.Wordprocessing.TableRow;
+using TopBorder = DocumentFormat.OpenXml.Wordprocessing.TopBorder;
 
 namespace SimpleWord
 {
@@ -33,7 +33,7 @@ namespace SimpleWord
             _td = tableDefinition;
         }
 
-        public Table Build(IGrouping<string, TDataClass> group)
+        public SimpleWordTable Build(IGrouping<string, TDataClass> group)
         {
             var table = CreateTable();
 
@@ -45,11 +45,12 @@ namespace SimpleWord
                 table.Append(CreateRow(row));
             }
 
-            return table;
+            return new SimpleWordTable(table);
         }
 
-        public Table Build(List<TDataClass> group)
+        public SimpleWordTable Build(List<TDataClass> group)
         {
+
             var table = CreateTable();
 
             //Headers
@@ -60,7 +61,7 @@ namespace SimpleWord
                 table.Append(CreateRow(row));
             }
 
-            return table;
+            return new SimpleWordTable(table);
         }
         private TableCellWidth GetCellWidth(ColumnDefinition<TDataClass> column)
         {

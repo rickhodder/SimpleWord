@@ -1,98 +1,11 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-using Break = DocumentFormat.OpenXml.Drawing.Break;
-using Paragraph = DocumentFormat.OpenXml.Drawing.Paragraph;
-using Run = DocumentFormat.OpenXml.Drawing.Run;
 
 namespace SimpleWord
 {
-
-    public class SimpleWordBody: IDisposable
-    {
-        private Body _body;
-
-        public SimpleWordBody(Body body)
-        {
-            _body = body;
-        }
-
-
-        public void Dispose()
-        {
-            _body = null;
-        }
-
-        public void AddBlankLine()
-        {
-            Paragraph para = _body.AppendChild(new Paragraph());
-            Run run = para.AppendChild(new Run());
-            run.AppendChild(new Text(""));
-        }
-
-        public void AddPageBreak()
-        {
-            _body.AppendChild(new Paragraph(new Run(new Break { Type = BreakValues.Page })));
-        }
-
-        public void AddText(string text)
-        {
-            _body.Append(new Paragraph(new Run( new Text(text))));
-        }
-
-        public void AddText(string text, string style)
-        {
-            Paragraph para = _body.AppendChild(new Paragraph());
-            para.ParagraphProperties = new ParagraphProperties(new ParagraphStyleId() { Val = style });
-            para.AppendChild(new Run(new Text(text)));
-        }
-
-    }
-
-    public class SimpleWordDocument : IDisposable
-    {
-
-        public SimpleWordBody Body { get; private set; }
-        public WordprocessingDocument Document { get; private set; }
-    
-        public SimpleWordDocument(WordprocessingDocument document, SimpleWordBody body)
-        {
-            Document = document;
-            Body = body;
-        }
-
-        public void Dispose()
-        {
-            Body?.Dispose();
-            Document?.Dispose();
-            Body = null;
-            Document = null;
-        }
-
-        public void AddBlankLine()
-        {
-            Body.AddBlankLine();
-        }
-
-        public void AddPageBreak()
-        {
-            Body.AddPageBreak();
-        }
-
-        public void AddText(string text)
-        {
-            Body.AddText(text);
-        }
-
-        public void AddText(string text, string style)
-        {
-            Body.AddText(text,style);
-        }
-    }
-
     public abstract class AbstractDocumentGenerator
     {
 
@@ -162,11 +75,24 @@ namespace SimpleWord
             _document.AddPageBreak();
         }
 
-        public TableBuilder<TDataClass> CreateTableBuilder<TDataClass>(SimpleWordDocument document, TableDefinition<TDataClass> definition, ColorScheme colorScheme)
+        public TableBuilder<TDataClass> CreateTableBuilder<TDataClass>(TableDefinition<TDataClass> definition, ColorScheme colorScheme)
         {
-            return new TableBuilder<TDataClass>(SimpleWordDocument document, definition, colorScheme);
+            return new TableBuilder<TDataClass>(_document, definition, colorScheme);
         }
 
+        public void AddTable(SimpleWordTable table)
+        {
+            _document.AddTable(table);
+        }
+
+        public void AddText(string text)
+        {
+            _document.AddText(text);
+        }
+        public void AddText(string text, string style)
+        {
+            _document.AddText(text, style);
+        }
 
     }
 }
