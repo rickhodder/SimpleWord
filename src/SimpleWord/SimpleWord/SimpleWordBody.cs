@@ -12,7 +12,6 @@ namespace SimpleWord
             _body = body;
         }
 
-
         public void Dispose()
         {
             _body = null;
@@ -37,7 +36,7 @@ namespace SimpleWord
 
         public void AddText(string text, string style)
         {
-            Paragraph para = _body.AppendChild(new Paragraph());
+            var para = _body.AppendChild(new Paragraph());
             para.ParagraphProperties = new ParagraphProperties(new ParagraphStyleId() { Val = style });
             para.AppendChild(new Run(new Text(text)));
         }

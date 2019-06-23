@@ -7,7 +7,7 @@ namespace DbDocumenter
 {
     public class DataDictionaryData
     {
-        string connectionString = @"server=svusstmsql47T\sql47T;database=MasterData;integrated security=true";
+        string connectionString = @"server=.;database=TeamGreenlight;integrated security=true";
         public List<Data> Get()
         {
             using (var connection = new SqlConnection(connectionString))
@@ -99,7 +99,6 @@ namespace DbDocumenter
                 var schema = new Schema
                 {
                     SchemaName = schemaName,
-                    //Tables = tables.Where(t => t.Table_Schema == schemaName).ToList()
                 };
 
                 MapTableDataToField(schema, tables);
@@ -107,9 +106,6 @@ namespace DbDocumenter
 
                 result.Schemas.Add(schema);
             }
-
-            //result.Schemas.Dump();
-
 
             return result;
         }
@@ -195,7 +191,6 @@ namespace DbDocumenter
                 }
 
             }
-
         }
     }
 }

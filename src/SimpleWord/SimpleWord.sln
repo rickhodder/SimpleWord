@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleWord", "SimpleWord\Si
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbDocumenter", "DbDocumenter\DbDocumenter.csproj", "{48D109A5-5EC2-454D-A4A1-706EDC433E13}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleWord.Tests", "SimpleWord.Tests\SimpleWord.Tests.csproj", "{0501F91B-82DF-4836-B2A4-43FD5A8AC54A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbDocumenter.Tests", "DbDocumenter.Tests\DbDocumenter.Tests.csproj", "{FD403928-9CC0-49F0-9563-F0AD7C8F4509}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{48D109A5-5EC2-454D-A4A1-706EDC433E13}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48D109A5-5EC2-454D-A4A1-706EDC433E13}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48D109A5-5EC2-454D-A4A1-706EDC433E13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0501F91B-82DF-4836-B2A4-43FD5A8AC54A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0501F91B-82DF-4836-B2A4-43FD5A8AC54A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0501F91B-82DF-4836-B2A4-43FD5A8AC54A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0501F91B-82DF-4836-B2A4-43FD5A8AC54A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD403928-9CC0-49F0-9563-F0AD7C8F4509}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD403928-9CC0-49F0-9563-F0AD7C8F4509}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD403928-9CC0-49F0-9563-F0AD7C8F4509}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD403928-9CC0-49F0-9563-F0AD7C8F4509}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

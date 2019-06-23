@@ -4,7 +4,6 @@ namespace SimpleWord
 {
     public class TableDefinition<TDataClass>
     {
-
         public TableDefinitionBorderType BorderType { get; set; } = TableDefinitionBorderType.Single;
         public int BorderWidth { get; set; } = 1;
         public ColorScheme ColorScheme { get; set; }

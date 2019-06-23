@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Office2010.Excel;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 
@@ -8,30 +7,31 @@ namespace SimpleWord
 {
     public abstract class AbstractDocumentGenerator
     {
-
-        protected SimpleWordDocument _document;
-        protected DocumentGeneratorRequest _request;
+        protected SimpleWordDocument Document;
+        protected DocumentGeneratorRequest Request;
 
         public void Generate(DocumentGeneratorRequest request)
         {
-            _request = request;
+            Request = request;
 
-            using (var doc = CreateDocument())
+            using (CreateDocument())
             {
                 PerformGeneration();
             }
+
+            Request = null;
         }
 
         public abstract void PerformGeneration();
 
         protected SimpleWordDocument CreateDocument()
         {
-            if (File.Exists(_request.FileName))
+            if (File.Exists(Request.FileName))
             {
-                File.Delete(_request.FileName);
+                File.Delete(Request.FileName);
             }
 
-            if (!string.IsNullOrEmpty(_request.TemplateFileName))
+            if (!string.IsNullOrEmpty(Request.TemplateFileName))
             {
                 CreateFileFromTemplate();
             }
@@ -40,59 +40,58 @@ namespace SimpleWord
                 CreateFile();
             }
 
-            return _document;
+            return Document;
         }
 
         protected void CreateFileFromTemplate()
         {
-            File.Copy(_request.TemplateFileName, _request.FileName);
+            File.Copy(Request.TemplateFileName, Request.FileName);
 
-            var document = WordprocessingDocument.Open(_request.FileName, true);
+            var document = WordprocessingDocument.Open(Request.FileName, true);
             var body = new SimpleWordBody(document.MainDocumentPart.Document.Body);
 
-            _document = new SimpleWordDocument(document, body);
+            Document = new SimpleWordDocument(document, body);
         }
 
         protected void CreateFile()
         {
-            var document = WordprocessingDocument.Create(_request.FileName, WordprocessingDocumentType.Document);
+            var document = WordprocessingDocument.Create(Request.FileName, WordprocessingDocumentType.Document);
             var mainPart = document.AddMainDocumentPart();
             mainPart.Document = new Document();
             var body = new Body();
-            
+
             mainPart.Document.AppendChild(body);
 
-            _document = new SimpleWordDocument(document, new SimpleWordBody(body));
+            Document = new SimpleWordDocument(document, new SimpleWordBody(body));
         }
 
         public void AddBlankLine()
         {
-            _document.AddBlankLine();
+            Document.AddBlankLine();
         }
 
         public void AddPageBreak()
         {
-            _document.AddPageBreak();
+            Document.AddPageBreak();
         }
 
         public TableBuilder<TDataClass> CreateTableBuilder<TDataClass>(TableDefinition<TDataClass> definition, ColorScheme colorScheme)
         {
-            return new TableBuilder<TDataClass>(_document, definition, colorScheme);
+            return new TableBuilder<TDataClass>(Document, definition, colorScheme);
         }
 
         public void AddTable(SimpleWordTable table)
         {
-            _document.AddTable(table);
+            Document.AddTable(table);
         }
 
         public void AddText(string text)
         {
-            _document.AddText(text);
+            Document.AddText(text);
         }
         public void AddText(string text, string style)
         {
-            _document.AddText(text, style);
+            Document.AddText(text, style);
         }
-
     }
 }

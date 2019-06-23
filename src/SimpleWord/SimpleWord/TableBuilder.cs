@@ -22,7 +22,7 @@ namespace SimpleWord
 {
     public class TableBuilder<TDataClass>
     {
-        TableDefinition<TDataClass> _td;
+        readonly TableDefinition<TDataClass> _td;
         ColorScheme _colorScheme;
         SimpleWordDocument _document;
 

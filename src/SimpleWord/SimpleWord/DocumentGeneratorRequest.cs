@@ -1,7 +1,5 @@
 ﻿namespace SimpleWord
 {
-   
-
     public class DocumentGeneratorRequest
     {
         public string FileName { get; set; }

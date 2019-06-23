@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mime;
 using SimpleWord;
 
 namespace DbDocumenter
@@ -32,21 +31,19 @@ namespace DbDocumenter
             {
                 AddSchemaHeader(schema.SchemaName);
 
-                var anyTables = schema.Tables.Any();
-                var anyProcs = schema.StoredProcedures.Any();
-
                 foreach (var table in schema.Tables)
                 {
                     if (table.Fields.Any())
                     {
                         AddFieldListTableHeader(table);
 
-                        _document.AddTable(CreateFieldListTable(table));
+                        Document.AddTable(CreateFieldListTable(table));
                     }
                     else
                     {
                         AddText("This table has no fields");
                     }
+
                     AddPageBreak();
                 }
 
@@ -67,15 +64,15 @@ namespace DbDocumenter
             }
         }
 
-        void AddOverviewHeader(string databaseName)
+        private void AddOverviewHeader(string databaseName)
         {
-            AddText($"Overview", "Heading2");
-            AddText($"Overview of this database", "Heading4");
+            AddText("Overview", "Heading2");
+            AddText("Overview of this database", "Heading4");
             AddText($"What follows is a breakdown of the {databaseName} database, by schema. Each schema will include a list of the tables and stored procedures that it contains. The tables will show the fields in the tables. The stored procedures will show the parameters of the procedures, if any exist.");
         }
 
 
-        void AddStoredProcTableHeader(StoredProcedure proc)
+        private void AddStoredProcTableHeader(StoredProcedure proc)
         {
             AddText($"Stored Procedure: {proc.Schema.SchemaName}.{proc.StoredProcedureName}", "Heading3");
             AddText($"Description of {proc.Schema.SchemaName}.{proc.StoredProcedureName}", "Heading4");
@@ -84,7 +81,7 @@ namespace DbDocumenter
 
         private SimpleWordTable CreateStoredProcParameterTable(List<StoredProcedureParameter> group)
         {
-            var tb = CreateTableBuilder(_storedProcedureParameterTableDefinition, _request.ColorScheme);
+            var tb = CreateTableBuilder(_storedProcedureParameterTableDefinition, Request.ColorScheme);
 
             var table = tb.Build(group);
 
@@ -93,31 +90,31 @@ namespace DbDocumenter
 
         private void CreateTableDefinitions()
         {
-            _fieldListTableDefinition = new TableDefinition<TableField>(_request.ColorScheme)
+            _fieldListTableDefinition = new TableDefinition<TableField>(Request.ColorScheme)
             {
                 Columns = new List<ColumnDefinition<TableField>> {
-                    new ColumnDefinition<TableField> (_request.ColorScheme){
+                    new ColumnDefinition<TableField> (Request.ColorScheme){
                         HeaderText="PK",
                         Contents= (d) => d.IsPrimaryKey ? "Yes" : "",
                     },
-                    new ColumnDefinition<TableField> (_request.ColorScheme) {
+                    new ColumnDefinition<TableField> (Request.ColorScheme) {
                         HeaderText="FK",
                         Contents= (d) => d.IsForeignKey ? "Yes" : ""
                     },
-                    new ColumnDefinition<TableField> (_request.ColorScheme) {
+                    new ColumnDefinition<TableField> (Request.ColorScheme) {
                         HeaderText="UK",
                         Contents= (d) => d.IsUniqueKey? "Yes" : ""
                     },
-                    new ColumnDefinition<TableField>  (_request.ColorScheme){
+                    new ColumnDefinition<TableField>  (Request.ColorScheme){
                         HeaderText="Column",
                         Contents= (d) => d.ColumnName,
                         Width=200
                     },
-                    new ColumnDefinition<TableField>  (_request.ColorScheme){
+                    new ColumnDefinition<TableField>  (Request.ColorScheme){
                         HeaderText="Type",
                         Contents= (d) => d.DataType
                     },
-                    new ColumnDefinition<TableField>  (_request.ColorScheme){
+                    new ColumnDefinition<TableField>  (Request.ColorScheme){
                         HeaderText="Size",
                         Contents= (d) => {
                             if(d.CharacterMaximumLength==null && d.NumericPrecision==null) return "";
@@ -127,7 +124,7 @@ namespace DbDocumenter
                             return size=="-1"? "MAX":size;
                         }
                     },
-                    new ColumnDefinition<TableField>  (_request.ColorScheme){
+                    new ColumnDefinition<TableField>  (Request.ColorScheme){
                         HeaderText="Note",
                         Contents= (d) => "",
                         Width=300
@@ -135,24 +132,24 @@ namespace DbDocumenter
                 }
             };
 
-            _storedProcedureParameterTableDefinition = new TableDefinition<StoredProcedureParameter>(_request.ColorScheme)
+            _storedProcedureParameterTableDefinition = new TableDefinition<StoredProcedureParameter>(Request.ColorScheme)
             {
                 Columns = new List<ColumnDefinition<StoredProcedureParameter>> {
-                    new ColumnDefinition<StoredProcedureParameter>  (_request.ColorScheme){
+                    new ColumnDefinition<StoredProcedureParameter>  (Request.ColorScheme){
                         HeaderText="In/Out",
                         Contents= (d) => d.ParameterDirection,
                         Width=60
                     },
-                    new ColumnDefinition<StoredProcedureParameter> (_request.ColorScheme){
+                    new ColumnDefinition<StoredProcedureParameter> (Request.ColorScheme){
                         HeaderText="Parameter Name",
                         Contents= (d) => d.ParameterName,
                         Width=200
                     },
-                    new ColumnDefinition<StoredProcedureParameter> (_request.ColorScheme) {
+                    new ColumnDefinition<StoredProcedureParameter> (Request.ColorScheme) {
                         HeaderText="Type",
                         Contents= (d) => d.DataType
                     },
-                    new ColumnDefinition<StoredProcedureParameter> (_request.ColorScheme) {
+                    new ColumnDefinition<StoredProcedureParameter> (Request.ColorScheme) {
                         HeaderText="Size",
                         Contents= (d) => {
                             if(d.Length==null ) return "";
@@ -163,7 +160,7 @@ namespace DbDocumenter
 
                         }
                     },
-                    new ColumnDefinition<StoredProcedureParameter>  (_request.ColorScheme){
+                    new ColumnDefinition<StoredProcedureParameter>  (Request.ColorScheme){
                         HeaderText="Note",
                         Contents= (d) => "",
                         Width=300
@@ -172,19 +169,8 @@ namespace DbDocumenter
             };
         }
 
-        void AddSchemaHeader(string schemaName)
+        private void AddSchemaHeader(string schemaName)
         {
-            /*
-             With an abstracted document, this could become
-
-             _document.CreateParagraph($"Schema: {schemaName}").ApplyStyle("Heading2");
-             _document.CreateParagraph("");
-
-             // notice, no references to body, run, paragraph, paragraph properties.
-             //         no appending children - allows it to be more abstracted, and 
-             //      potentially applicable to more than one form of output.
-            */
-
             AddPageBreak();
 
             AddText($"Schema: {schemaName}", "Heading2");
@@ -192,37 +178,25 @@ namespace DbDocumenter
             AddBlankLine();
         }
 
-        void AddDocumentHeader(string database)
+        private void AddDocumentHeader(string database)
         {
             AddText($"Data Dictionary for Database: {database}", "Heading1");
         }
 
-
-        void AddFieldListTableHeader(IGrouping<string, Data> group)
-        {
-            var table = group.First();
-            AddText($"Table: {table.Table_Schema}.{table.Table_Name}", "Heading3");
-
-            table = group.First();
-            AddText($"Description of {table.Table_Schema}.{table.Table_Name}", "Heading4");
-            AddBlankLine();
-        }
-
-        void AddFieldListTableHeader(SchemaTable table)
+        private void AddFieldListTableHeader(SchemaTable table)
         {
             AddText($"Table: {table.Schema.SchemaName}.{table.TableName}", "Heading3");
             AddText($"Description of {table.Schema.SchemaName}.{table.TableName}", "Heading4");
             AddBlankLine();
         }
 
-        SimpleWordTable CreateFieldListTable(SchemaTable schemaTable)
+        private SimpleWordTable CreateFieldListTable(SchemaTable schemaTable)
         {
-            var tb = CreateTableBuilder(_fieldListTableDefinition, _request.ColorScheme);
+            var tb = CreateTableBuilder(_fieldListTableDefinition, Request.ColorScheme);
 
             var table = tb.Build(schemaTable.Fields);
 
             return table;
         }
-
     }
 }
