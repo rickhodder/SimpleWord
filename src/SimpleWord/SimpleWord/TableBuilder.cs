@@ -33,6 +33,16 @@ namespace SimpleWord
             _td = tableDefinition;
         }
 
+        public TableBuilder(SimpleWordDocument document, ColorScheme scheme) : this(document, new TableDefinition<TDataClass>(scheme), scheme)
+        {
+
+        }
+
+        public TableBuilder(SimpleWordDocument document) : this(document, new TableDefinition<TDataClass>(new DefaultColorScheme()), new DefaultColorScheme())
+        {
+
+        }
+
         public SimpleWordTable Build(IGrouping<string, TDataClass> group)
         {
             var table = CreateTable();
@@ -63,6 +73,12 @@ namespace SimpleWord
 
             return new SimpleWordTable(table);
         }
+
+        public TableBuilder<TDataClass> AddColumn()
+        {
+            return this;
+        }
+
         private TableCellWidth GetCellWidth(ColumnDefinition<TDataClass> column)
         {
             TableWidthUnitValues units = TableWidthUnitValues.Auto;

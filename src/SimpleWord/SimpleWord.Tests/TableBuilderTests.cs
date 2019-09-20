@@ -4,11 +4,17 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace SimpleWord.Tests
 {
     [TestClass]
-    public class UnitTest1
+    public class TableBuilderTests
     {
         [TestMethod]
         public void TestMethod1()
         {
+            var sut=new TableBuilder<TestData>(new SimpleWordDocument(new WordprocessingDocument(), new SimpleWordBody()))
         }
+    }
+
+    public class TestData
+    {
+
     }
 }
