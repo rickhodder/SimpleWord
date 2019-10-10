@@ -1,4 +1,5 @@
 ﻿using System;
+using DocumentFormat.OpenXml.Packaging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace SimpleWord.Tests
@@ -9,7 +10,7 @@ namespace SimpleWord.Tests
         [TestMethod]
         public void TestMethod1()
         {
-            var sut=new TableBuilder<TestData>(new SimpleWordDocument(new WordprocessingDocument(), new SimpleWordBody()))
+           // var sut=new TableBuilder<TestData>(new SimpleWordDocument(new WordprocessingDocument(), new SimpleWordBody()))
         }
     }
 

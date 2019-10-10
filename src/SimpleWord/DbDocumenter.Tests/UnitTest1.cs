@@ -21,7 +21,7 @@ namespace DbDocumenter.Tests
                 }
             };
 
-
+            // for now put connection string in DataDictionaryData class
             var docGenerator = new DataDictionaryDocumentGenerator();
             docGenerator.Generate(request);
             Process.Start(request.FileName);

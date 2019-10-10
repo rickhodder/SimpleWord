@@ -7,7 +7,8 @@ namespace DbDocumenter
 {
     public class DataDictionaryData
     {
-        string connectionString = @"server=.;database=TeamGreenlight;integrated security=true";
+        // put the connection string for the database you want to document here
+        string connectionString = @"server=aa;database=bb;integrated security=true";
         public List<Data> Get()
         {
             using (var connection = new SqlConnection(connectionString))
